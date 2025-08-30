@@ -1,0 +1,153 @@
+#include <stdio.h>
+#include <stdlib.h> // Para a função abs()
+
+// Define o tamanho do tabuleiro
+#define TAMANHO_TABULEIRO 8
+
+// ---
+// Nível Novato - Movimentação das Peças
+// ---
+// Funções para movimentação de peças sem recursão
+
+void moverBispoDiagonal(int linhaInicial, int colunaInicial) {
+    printf("Movimentação do Bispo (Diagonal):\n");
+    printf("Posição inicial: (%d, %d)\n", linhaInicial, colunaInicial);
+
+    // Mover para a diagonal superior-direita
+    printf("  -> Diagonal Superior-Direita:\n");
+    for (int i = 1; linhaInicial - i >= 0 && colunaInicial + i < TAMANHO_TABULEIRO; i++) {
+        printf("    (%d, %d)\n", linhaInicial - i, colunaInicial + i);
+    }
+
+    // Mover para a diagonal inferior-direita
+    printf("  -> Diagonal Inferior-Direita:\n");
+    for (int i = 1; linhaInicial + i < TAMANHO_TABULEIRO && colunaInicial + i < TAMANHO_TABULEIRO; i++) {
+        printf("    (%d, %d)\n", linhaInicial + i, colunaInicial + i);
+    }
+}
+
+void moverTorreDireita(int linhaInicial, int colunaInicial) {
+    printf("Movimentação da Torre (para a Direita):\n");
+    printf("Posição inicial: (%d, %d)\n", linhaInicial, colunaInicial);
+
+    // Mover para a direita
+    for (int i = colunaInicial + 1; i < TAMANHO_TABULEIRO; i++) {
+        printf("  -> (%d, %d)\n", linhaInicial, i);
+    }
+}
+
+void moverRainhaEsquerda(int linhaInicial, int colunaInicial) {
+    printf("Movimentação da Rainha (para a Esquerda):\n");
+    printf("Posição inicial: (%d, %d)\n", linhaInicial, colunaInicial);
+    
+    // Mover para a esquerda
+    for (int i = colunaInicial - 1; i >= 0; i--) {
+        printf("  -> (%d, %d)\n", linhaInicial, i);
+    }
+}
+
+// ---
+// Nível Aventureiro - Movimentação do Cavalo
+// ---
+
+void moverCavalo(int linhaInicial, int colunaInicial) {
+    printf("Movimentação do Cavalo (em L):\n");
+    printf("Posição inicial: (%d, %d)\n", linhaInicial, colunaInicial);
+
+    int movimentosPossiveis[8][2] = {
+        {1, 2}, {1, -2}, {-1, 2}, {-1, -2},
+        {2, 1}, {2, -1}, {-2, 1}, {-2, -1}
+    };
+
+    printf("Posições alcançadas:\n");
+    for (int i = 0; i < 8; i++) {
+        int novaLinha = linhaInicial + movimentosPossiveis[i][0];
+        int novaColuna = colunaInicial + movimentosPossiveis[i][1];
+
+        // Verifica se a nova posição está dentro do tabuleiro
+        if (novaLinha >= 0 && novaLinha < TAMANHO_TABULEIRO &&
+            novaColuna >= 0 && novaColuna < TAMANHO_TABULEIRO) {
+            printf("  -> (%d, %d)\n", novaLinha, novaColuna);
+        }
+    }
+}
+
+// ---
+// Nível Mestre - Funções Recursivas e Loops Avançados
+// ---
+
+// Função recursiva para o movimento do Bispo
+void moverBispoRecursivo(int linhaAtual, int colunaAtual, int linhaDelta, int colunaDelta) {
+    // Condição de parada: se a peça saiu do tabuleiro
+    if (linhaAtual < 0 || linhaAtual >= TAMANHO_TABULEIRO ||
+        colunaAtual < 0 || colunaAtual >= TAMANHO_TABULEIRO) {
+        return;
+    }
+
+    printf("  -> (%d, %d)\n", linhaAtual, colunaAtual);
+
+    // Chamada recursiva para o próximo passo
+    moverBispoRecursivo(linhaAtual + linhaDelta, colunaAtual + colunaDelta, linhaDelta, colunaDelta);
+}
+
+// Implementação do Cavalo com loops e condições avançadas
+void moverCavaloAvancado(int linhaInicial, int colunaInicial) {
+    printf("Movimentação do Cavalo (Avançado):\n");
+    printf("Posição inicial: (%d, %d)\n", linhaInicial, colunaInicial);
+    printf("Posições alcançadas:\n");
+
+    int x[8] = {2, 1, -1, -2, -2, -1, 1, 2};
+    int y[8] = {1, 2, 2, 1, -1, -2, -2, -1};
+
+    for (int i = 0; i < 8; i++) {
+        int novaLinha = linhaInicial + x[i];
+        int novaColuna = colunaInicial + y[i];
+
+        // 'continue' para pular para a próxima iteração se a posição for inválida
+        if (novaLinha < 0 || novaLinha >= TAMANHO_TABULEIRO ||
+            novaColuna < 0 || novaColuna >= TAMANHO_TABULEIRO) {
+            continue;
+        }
+
+        // 'break' se, por algum motivo, quisermos parar no meio (exemplo didático)
+        // if (novaLinha == 4 && novaColuna == 3) {
+        //     printf("    Parando na posição (4,3) com break.\n");
+        //     break;
+        // }
+
+        printf("  -> (%d, %d)\n", novaLinha, novaColuna);
+    }
+}
+
+// ---
+// Main
+// ---
+int main() {
+    int linha = 3, coluna = 4;
+
+    printf("--- Nível Novato ---\n");
+    moverBispoDiagonal(linha, coluna);
+    printf("\n");
+    moverTorreDireita(linha, coluna);
+    printf("\n");
+    moverRainhaEsquerda(linha, coluna);
+    printf("\n");
+
+    printf("--- Nível Aventureiro ---\n");
+    moverCavalo(linha, coluna);
+    printf("\n");
+    
+    printf("--- Nível Mestre ---\n");
+    printf("Movimentação do Bispo (Recursiva):\n");
+    printf("Posição inicial: (%d, %d)\n", linha, coluna);
+    printf("  -> Diagonal Superior-Esquerda:\n");
+    moverBispoRecursivo(linha, coluna, -1, -1);
+    printf("  -> Diagonal Inferior-Direita:\n");
+    moverBispoRecursivo(linha, coluna, 1, 1);
+    printf("\n");
+
+    moverCavaloAvancado(linha, coluna);
+    printf("\n");
+
+    return 0;
+}
